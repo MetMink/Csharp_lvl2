@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace MyGame
 {
@@ -16,7 +17,8 @@ namespace MyGame
             }
         public virtual void Draw()
             {
-            Game.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
+            //Game.Buffer.Graphics.DrawImage(Image asteroid.png, Pos.X, Pos.Y, Size.Width, Size.Height);
+            Game.Buffer.Graphics.DrawImage(Image.FromFile("asteroid1.png"), Pos.X, Pos.Y);
             }
         public virtual void Update()
             {

@@ -11,10 +11,16 @@ namespace MyGame
         public static BaseObject[] _objs;
         public static int Width { get; set; }
         public static int Height { get; set; }
-
+        public static Random random = new Random();
+        
         static Game()
         {
 
+        }
+        public static int Random(int min, int max)
+        {
+            int num = random.Next(min, max);
+            return num;
         }
         public static void Init(Form form)
         {
@@ -32,10 +38,6 @@ namespace MyGame
         public static void Draw()
         {
             Buffer.Graphics.Clear(Color.Black);
-            Buffer.Graphics.DrawRectangle(Pens.White, new Rectangle(100, 100, 200, 200));
-            Buffer.Graphics.FillEllipse(Brushes.Wheat, new Rectangle(100, 100, 200, 200));
-            Buffer.Render();
-            Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _objs)
             {
                 obj.Draw();
@@ -49,21 +51,33 @@ namespace MyGame
         }
         public static void Load()
         {
-            _objs = new BaseObject[30];
-            for (int i = 0; i < 13; i++)
+            _objs = new BaseObject[33];
+            int x, y;
+            for (int i = 0; i < _objs.Length/3; i++)
             {
-                _objs[i] = new BaseObject(new Point(600, i * 20), new Point(- i, - i), new Size(10, 10));
+                x = Random(10, 599);
+                y = Random(10, 799);
+                _objs[i] = new BaseObject(new Point(x, y), new Point(- i, - i), new Size(1, 1));
             }
-            for (int i = 17; i< _objs.Length; i++)
+            for (int i = _objs.Length/3; i< _objs.Length - 8; i++)
             {
-                _objs[i] = new Star(new Point(600, i * 20), new Point(- i, 0), new Size(5, 5));
+                x = Random(10, 599);
+                y = Random(10, 799);
+                _objs[i] = new Star(new Point(x, y), new Point(- i, 0), new Size(5, 5));
             }
-            for (int i = 13; i<=16; i ++)
+            for (int i = _objs.Length - 8; i<=_objs.Length-2; i ++)
             {
-                if (i == 13) _objs[i] = new Line(new Point(100, 200), new Point(-i, i), new Size(10, 1));
-                else if (i == 14) _objs[i] = new Line(new Point(300, 400), new Point(-i, i), new Size(100, 1));
-                else if (i == 15) _objs[i] = new Line(new Point(500, 600), new Point(-i, i), new Size(10, 1));
-                else if (i == 16) _objs[i] = new Line(new Point(600, 750), new Point(-i, i), new Size(100, 1));
+                x = Random(10, 599);
+                y = Random(10, 799);
+                _objs[i] = new Line(new Point(x, y), new Point(-i, i), new Size(10, 1));
+            }
+            for (int i = _objs.Length - 2;i < _objs.Length ; i++)
+            {
+                _objs[i] = new Planet(new Point(600, 100), new Point(-i/15, 0), new Size(200, 200));
+            }
+            for (int i = _objs.Length - 1; i < _objs.Length; i++)
+            {
+                _objs[i] = new SpaceShip(new Point(200, 350), new Point(0, 0), new Size(1, 1));
             }
 
         }
