@@ -37,10 +37,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asteroid.cs" />
+    <Compile Include="Bullets.cs" />
     <Compile Include="CodeFile1.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="BaseObject.cs" />
+    <Compile Include="GameObjectEx.cs" />
     <Compile Include="Line.cs" />
+    <Compile Include="Planet.cs" />
+    <Compile Include="SpaceShip.cs" />
     <Compile Include="Star.cs" />
   </ItemGroup>
   <ItemGroup>

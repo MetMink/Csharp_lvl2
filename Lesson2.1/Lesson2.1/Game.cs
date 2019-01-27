@@ -9,13 +9,27 @@ namespace MyGame
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
         public static BaseObject[] _objs;
+        private static Asteroid[] _asteroid;
+        private static Bullets _bullet;
         public static int Width { get; set; }
         public static int Height { get; set; }
-
+        public static Random random = new Random();
+        const int max = 1000;
+        const int min = 0;
+        
         static Game()
         {
 
         }
+        public static int Random(int min, int max)
+        {
+            int num = random.Next(min, max);
+            return num;
+        }
+        /// <summary>
+        /// Создание буфера и задание интервала, с которым будут отрисовываться объекты и обновляться их позиция
+        /// </summary>
+        /// <param name="form"></param>
         public static void Init(Form form)
         {
             Graphics g;
@@ -23,47 +37,71 @@ namespace MyGame
             g = form.CreateGraphics();
             Width = form.ClientSize.Width;
             Height = form.ClientSize.Height;
+            if ((Width < min || Height < min)||(Width > max||Height > max))
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
             Timer timer = new Timer { Interval = 100 };
             timer.Start();
             timer.Tick += Timer_Tick;
             Load();
         }
+        /// <summary>
+        /// Отрисовка объектов
+        /// </summary>
         public static void Draw()
         {
-            Buffer.Graphics.Clear(Color.Black);
-            Buffer.Graphics.DrawRectangle(Pens.White, new Rectangle(100, 100, 200, 200));
-            Buffer.Graphics.FillEllipse(Brushes.Wheat, new Rectangle(100, 100, 200, 200));
-            Buffer.Render();
             Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _objs)
             {
                 obj.Draw();
             }
+            foreach (Asteroid ast in _asteroid)
+            {
+                ast.Draw();
+            }
+            _bullet.Draw();
+
             Buffer.Render();
         }
         public static void Update()
         {
             foreach (BaseObject obj in _objs)
                 obj.Update();
+            foreach (Asteroid ast in _asteroid)
+                ast.Update();
+            _bullet.Draw();
         }
+        /// <summary>
+        /// Создание экземпляров класса
+        /// </summary>
         public static void Load()
         {
-            _objs = new BaseObject[30];
-            for (int i = 0; i < 13; i++)
+            _objs = new BaseObject[33];
+            _asteroid = new Asteroid[10];
+            _bullet = new Bullets(new Point(0, 200), new Point(5, 0), new Size(4, 1));
+            int x, y;
+            for (int i = 0; i < _asteroid.Length; i++)
             {
-                _objs[i] = new BaseObject(new Point(600, i * 20), new Point(- i, - i), new Size(10, 10));
+                _asteroid[i] = new Asteroid(new Point(Random(10, 599), Random(10, 799)), new Point(2 * i, -i), new Size(1, 1));
             }
-            for (int i = 17; i< _objs.Length; i++)
+            for (int i = 0; i< _objs.Length - 8; i++)
             {
-                _objs[i] = new Star(new Point(600, i * 20), new Point(- i, 0), new Size(5, 5));
+                _objs[i] = new Star(new Point(Random(10, 599), Random(10, 799)), new Point(- i, 0), new Size(5, 5));
             }
-            for (int i = 13; i<=16; i ++)
+            for (int i = _objs.Length - 8; i<=_objs.Length-2; i ++)
             {
-                if (i == 13) _objs[i] = new Line(new Point(100, 200), new Point(-i, i), new Size(10, 1));
-                else if (i == 14) _objs[i] = new Line(new Point(300, 400), new Point(-i, i), new Size(100, 1));
-                else if (i == 15) _objs[i] = new Line(new Point(500, 600), new Point(-i, i), new Size(10, 1));
-                else if (i == 16) _objs[i] = new Line(new Point(600, 750), new Point(-i, i), new Size(100, 1));
+
+                _objs[i] = new Line(new Point(Random(10, 599), Random(10, 799)), new Point(-5*i, i), new Size(10, 1));
+            }
+            for (int i = _objs.Length - 2;i < _objs.Length ; i++)
+            {
+                _objs[i] = new Planet(new Point(600, 100), new Point(-i/15, 0), new Size(200, 200));
+            }
+            for (int i = _objs.Length - 1; i < _objs.Length; i++)
+            {
+                _objs[i] = new SpaceShip(new Point(200, 350), new Point(0, 0), new Size(1, 1));
             }
 
         }

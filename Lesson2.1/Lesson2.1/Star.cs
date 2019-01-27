@@ -3,6 +3,9 @@ using System.Drawing;
 
 namespace MyGame
 {
+    /// <summary>
+    /// Звезда
+    /// </summary>
     class Star: BaseObject
     {
         public Star (Point pos, Point dir, Size size):base(pos,dir,size)
